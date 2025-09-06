@@ -1,0 +1,15 @@
+<div class="relative w-full h-80 [perspective:500px] overflow-hidden">
+  <div class="w-full h-full relative [transform-style:preserve-3d] animate-spin-carousel-8 flex items-center justify-center">
+  @for (img of images; let idx = $index; track idx) {
+      <div
+        class="absolute [backface-visibility:hidden] bg-cover bg-center rounded-lg shadow-lg"
+        [ngStyle]="{
+          'background-image': 'url(' + img + ')',
+          'transform': 'rotateY(' + (idx * 45) + 'deg) translateZ(150px)'
+        }"
+      >
+        <div class="w-20 h-30 bg-cover bg-center rounded" [style.background-image]="'url(' + img + ')'"></div>
+      </div>
+    }
+  </div>
+</div>
