@@ -1,0 +1,19 @@
+@if (isVisible) {
+  <div
+    class="fixed inset-0 bg-neutral-500/80 flex items-center justify-center z-50"
+    (click)="close()"
+  >
+    <div
+      class="bg-neutral-700 rounded-lg p-6 w-full max-w-md shadow-lg relative"
+      (click)="$event.stopPropagation()"
+    >
+      <ng-content></ng-content>
+      <button
+        class="mt-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+        (click)="close()"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+}

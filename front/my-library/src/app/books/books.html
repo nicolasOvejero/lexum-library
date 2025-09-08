@@ -1,10 +1,138 @@
-<article class="books h-[80vh] w-[50vw] overflow-scroll mx-auto flex gap-4">
-  @for (book of books; let idx = $index; track idx) {
-    <div class="w-1/4 h-min rounded-lg border border-neutral-100 aspect-[2/3] relative">
-      <div class="absolute bottom-0 w-full p-4 bg-linear-to-t from-neutral-700 to-neutral-900 to-75%">
-        <p class="text-white text-base">{{ book.title }}</p>
-        <p class="text-neutral-300 text-sm">{{ mapAuthors(book.authors) }}</p>
-      </div>
+<article class="books h-[80vh] w-[50vw] overflow-scroll mx-auto flex flex-col gap-4">
+  <section class="flex w-full">
+    <button class="text-white px-4 py-2 rounded-lg border border-neutral-100 hover:cursor-pointer" (click)="showPopup = true">
+      Add new book
+    </button>
+  </section>
+
+  <section class="flex gap-4">
+    @for (book of books; let idx = $index; track idx) {
+      <section class="w-1/4 h-min rounded-lg border border-neutral-100 aspect-[2/3] relative">
+        <div class="absolute bottom-0 w-full p-4 bg-linear-to-t from-neutral-700 to-neutral-900 to-75%">
+          <p class="text-white text-base">{{ book.title }}</p>
+          <p class="text-neutral-300 text-sm">{{ mapAuthors(book.authors) }}</p>
+        </div>
+      </section>
+    }
+  </section>
+
+  <app-popup [isVisible]="showPopup" (isVisibleChange)="showPopup = $event">
+    <div class="flex flex-col">
+      <h2 class="text-neutral-200 text-center text-3xl pb-4">Add a new book</h2>
+      <form class="flex flex-col gap-4" novalidate [formGroup]="form" (ngSubmit)="submitForm()">
+        <div class="relative w-full">
+          <input
+            formControlName="title"
+            type="text"
+            id="title"
+            name="title"
+            placeholder=" "
+            class="peer w-full border border-gray-300 rounded-md px-3 pt-5 pb-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            required
+          />
+          <label
+            for="title"
+            class="absolute text-gray-500 text-sm left-3 top-1.5 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-1.5 peer-focus:text-sm peer-focus:text-blue-500"
+          >
+            Book title
+          </label>
+          @if (getErrorMessage('title')) {
+            <p class="text-red-600 text-sm mt-1">
+              {{ getErrorMessage('title') }}
+            </p>
+          }
+        </div>
+        <div class="relative w-full">
+          <input
+            formControlName="authors"
+            type="text"
+            id="authors"
+            name="authors"
+            placeholder=" "
+            class="peer w-full border border-gray-300 rounded-md px-3 pt-5 pb-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            required
+          />
+          <label
+            for="authors"
+            class="absolute text-gray-500 text-sm left-3 top-1.5 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-1.5 peer-focus:text-sm peer-focus:text-blue-500"
+          >
+            Authors (separate by coma)
+          </label>
+          @if (getErrorMessage('authors')) {
+            <p class="text-red-600 text-sm mt-1">
+              {{ getErrorMessage('authors') }}
+            </p>
+          }
+        </div>
+        <div class="relative w-full">
+          <input
+            formControlName="publishDate"
+            type="date"
+            id="publishDate"
+            name="publishDate"
+            placeholder=" "
+            class="peer w-full border border-gray-300 rounded-md px-3 pt-5 pb-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            required
+          />
+          <label
+            for="publishDate"
+            class="absolute text-gray-500 text-sm left-3 top-1.5 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-1.5 peer-focus:text-sm peer-focus:text-blue-500"
+          >
+            Publication date
+          </label>
+          @if (getErrorMessage('publishDate')) {
+            <p class="text-red-600 text-sm mt-1">
+              {{ getErrorMessage('publishDate') }}
+            </p>
+          }
+        </div>
+        <div class="relative w-full">
+          <input
+            formControlName="nbPages"
+            type="number"
+            min="0"
+            id="nbPages"
+            name="nbPages"
+            placeholder=" "
+            class="peer w-full border border-gray-300 rounded-md px-3 pt-5 pb-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            required
+          />
+          <label
+            for="nbPages"
+            class="absolute text-gray-500 text-sm left-3 top-1.5 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-1.5 peer-focus:text-sm peer-focus:text-blue-500"
+          >
+            Number of pages
+          </label>
+          @if (getErrorMessage('nbPages')) {
+            <p class="text-red-600 text-sm mt-1">
+              {{ getErrorMessage('nbPages') }}
+            </p>
+          }
+        </div>
+        <div class="relative w-full">
+          <textarea
+            formControlName="summary"
+            id="summary"
+            name="summary"
+            rows="4"
+            placeholder=" "
+            class="peer w-full border border-gray-300 rounded-md px-3 pt-6 pb-2 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            required
+          ></textarea>
+          <label
+            for="summary"
+            class="absolute text-gray-500 text-sm left-3 top-2.5 transition-all duration-200 peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-2.5 peer-focus:text-sm peer-focus:text-blue-500"
+          >
+            Summary
+          </label>
+          @if (getErrorMessage('summary')) {
+            <p class="text-red-600 text-sm mt-1">
+              {{ getErrorMessage('summary') }}
+            </p>
+          }
+        </div>
+        <button type="submit">Save new book</button>
+      </form>
     </div>
-  }
+  </app-popup>
 </article>
