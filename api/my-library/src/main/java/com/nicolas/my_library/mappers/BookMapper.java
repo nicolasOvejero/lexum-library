@@ -16,7 +16,7 @@ public class BookMapper {
         dto.setId(book.getId());
         dto.setTitle(book.getTitle());
         dto.setSummary(book.getSummary());
-        dto.setNbPages(book.getNbPages());
+        dto.setNbPages(book.getNb_pages());
         dto.setPublishDate(book.getPublishDate());
 
         final List<AuthorDTO> authorDTOs = book.getAuthors().stream()
@@ -33,7 +33,7 @@ public class BookMapper {
         book.setId(dto.getId());
         book.setTitle(dto.getTitle());
         book.setSummary(dto.getSummary());
-        book.setNbPages(dto.getNbPages());
+        book.setNb_pages(dto.getNbPages());
         book.setPublishDate(dto.getPublishDate());
 
         final List<Author> authors = dto.getAuthors().stream()

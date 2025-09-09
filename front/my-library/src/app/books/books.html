@@ -1,4 +1,4 @@
-<article class="books h-[80vh] w-[50vw] overflow-scroll mx-auto flex flex-col gap-4">
+<article class="books h-[80vh] w-[50vw] overflow-auto mx-auto flex flex-col gap-4">
   <section class="flex w-full">
     <button class="text-white px-4 py-2 rounded-lg border border-neutral-100 hover:cursor-pointer" (click)="showPopup = true">
       Add new book
@@ -7,7 +7,10 @@
 
   <section class="flex gap-4">
     @for (book of books; let idx = $index; track idx) {
-      <section class="w-1/4 h-min rounded-lg border border-neutral-100 aspect-[2/3] relative">
+      <section
+        class="w-1/4 h-min rounded-lg border border-neutral-100 aspect-[2/3] relative hover:cursor-pointer"
+        (click)="showBook(book.id)"
+      >
         <div class="absolute bottom-0 w-full p-4 bg-linear-to-t from-neutral-700 to-neutral-900 to-75%">
           <p class="text-white text-base">{{ book.title }}</p>
           <p class="text-neutral-300 text-sm">{{ mapAuthors(book.authors) }}</p>

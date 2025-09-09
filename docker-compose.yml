@@ -9,7 +9,7 @@ services:
       MYSQL_DATABASE: library
       MYSQL_USER: nicolas
       MYSQL_PASSWORD: nikospwd
-#    volumes:
-#      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "3306:3306"

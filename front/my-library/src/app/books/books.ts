@@ -1,12 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import { BooksService } from './services/books.service';
 import { Book } from './book.interface';
 import { first } from 'rxjs';
 import {Author} from '../authors/author.interface';
-import {Authors} from '../authors/authors';
 import {Popup} from '../components/popup/popup';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {bookSchema} from './schemas/add-book-schema';
+import {Router} from '@angular/router';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 
 @Component({
@@ -27,9 +28,12 @@ export class Books implements OnInit {
   form: FormGroup;
   errors: Partial<Record<keyof Book, string>> = {};
 
+  private _snackBar = inject(MatSnackBar);
+
   constructor(
     private booksService: BooksService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private router: Router
   ) {
     this.form = this.fb.group({
       title: ['', [Validators.required]],
@@ -68,7 +72,6 @@ export class Books implements OnInit {
       return;
     }
 
-    console.log('Données validées :', result.data, this.form.value);
     this.booksService
       .saveBook({
         ...result.data,
@@ -79,6 +82,12 @@ export class Books implements OnInit {
       )
       .subscribe((book: Book) => {
         this.books.push(book);
+        this.showPopup = false;
+        this._snackBar.open('Book added', undefined, {
+          duration: 3000,
+          horizontalPosition: 'right',
+          verticalPosition: 'top',
+        });
       });
   }
 
@@ -99,6 +108,10 @@ export class Books implements OnInit {
       return control.errors['zod'];
     }
     return null;
+  }
+
+  showBook(bookId: string): void {
+    this.router.navigate([`/books/${bookId}`]);
   }
 
   private setZodErrors(issues: Array<{ path: (string | number)[]; message: string }>) {

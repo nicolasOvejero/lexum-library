@@ -23,7 +23,9 @@ public class Book {
 
     private Date publishDate;
 
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String summary;
 
-    private Integer nbPages;
+    private Integer nb_pages;
 }

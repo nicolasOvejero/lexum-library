@@ -13,6 +13,14 @@ export class BooksService {
     return this.http.get<Book[]>(`${this.apiUrl}/books`);
   }
 
+  getBook(bookId: string): Observable<Book> {
+    return this.http.get<Book>(`${this.apiUrl}/books/${bookId}`);
+  }
+
+  deleteBook(bookId: string): Observable<Book> {
+    return this.http.delete<Book>(`${this.apiUrl}/books/${bookId}`);
+  }
+
   saveBook(newBook: Partial<Book>): Observable<Book> {
     return this.http.post<Book>(
       `${this.apiUrl}/books`,

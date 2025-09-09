@@ -25,6 +25,7 @@ public class BookService {
 
     public List<BookDTO> getBooks() {
         final List<Book> booksInDb = bookRepository.findAll();
+        System.out.println(booksInDb.get(0).toString());
 
         return booksInDb
                 .stream()
@@ -53,7 +54,7 @@ public class BookService {
 
         bookInDb.setTitle(book.getTitle());
         bookInDb.setSummary(book.getSummary());
-        bookInDb.setNbPages(book.getNbPages());
+        bookInDb.setNb_pages(book.getNbPages());
         bookInDb.setPublishDate(book.getPublishDate());
 
         final List<Author> authors = book.getAuthors()

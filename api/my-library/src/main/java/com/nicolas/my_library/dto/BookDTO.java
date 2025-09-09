@@ -28,6 +28,7 @@ public class BookDTO {
     private Date publishDate;
 
     @NotNull
+    @Size(min = 1, max = 3000)
     private String summary;
 
     @NotNull

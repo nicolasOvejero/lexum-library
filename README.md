@@ -11,3 +11,5 @@ If you don't have docker you can follow the process to install it on your comput
 First step is to compile the image with the following command: `docker build -t mon-mysql .`
 
 Second step it's to run the docker container with the following command: `docker run --name mysql-container -p 3306:3306 -d mon-mysql`
+
+Or you can use the docker compose file : `docker compose up`
