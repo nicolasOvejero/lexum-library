@@ -4,17 +4,21 @@ import { Book } from './book.interface';
 import { first } from 'rxjs';
 import {Author} from '../authors/author.interface';
 import {Popup} from '../components/popup/popup';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {bookSchema} from './schemas/add-book-schema';
+import {ReactiveFormsModule} from '@angular/forms';
 import {Router} from '@angular/router';
 import {MatSnackBar} from '@angular/material/snack-bar';
-
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatDialog} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-books',
   imports: [
-    Popup,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatDatepickerModule,
   ],
   providers: [
     BooksService,
@@ -24,24 +28,14 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 })
 export class Books implements OnInit {
   books: Book[] = [];
-  showPopup: boolean = false;
-  form: FormGroup;
-  errors: Partial<Record<keyof Book, string>> = {};
+  readonly dialog = inject(MatDialog);
 
   private _snackBar = inject(MatSnackBar);
 
   constructor(
     private booksService: BooksService,
-    private fb: FormBuilder,
     private router: Router
   ) {
-    this.form = this.fb.group({
-      title: ['', [Validators.required]],
-      authors: ['', [Validators.required]],
-      publishDate: ['', [Validators.required]],
-      summary: ['', [Validators.required]],
-      nbPages: ['', [Validators.required]],
-    });
   }
 
   ngOnInit(): void {
@@ -61,17 +55,24 @@ export class Books implements OnInit {
       .join(', ');
   }
 
-  submitForm(): void {
-    if (this.form.invalid) {
-      return;
-    }
-    const result = bookSchema.safeParse(this.form.value);
+  openPopup(): void {
+    const dialogRef = this.dialog.open(Popup, {
+      width: '70vw',
+      maxWidth: '70vw',
+      panelClass: 'full-screen-dialog'
+    });
 
-    if (!result.success) {
-      this.setZodErrors(result.error.issues);
-      return;
-    }
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed', result);
+    });
+  }
 
+  showBook(bookId: string): void {
+    this.router.navigate([`/books/${bookId}`]);
+  }
+
+  private saveBook(): void {
+/*
     this.booksService
       .saveBook({
         ...result.data,
@@ -89,41 +90,6 @@ export class Books implements OnInit {
           verticalPosition: 'top',
         });
       });
-  }
-
-  getErrorMessage(controlName: string): string | null {
-    const control = this.form.get(controlName);
-    if (!control || !control.errors) return null;
-
-    if (control.errors['required']) {
-      return 'Ce champ est obligatoire';
-    }
-    if (control.errors['email']) {
-      return 'Format email invalide';
-    }
-    if (control.errors['minlength']) {
-      return `Minimum ${control.errors['minlength'].requiredLength} caractères`;
-    }
-    if (control.errors['zod']) {
-      return control.errors['zod'];
-    }
-    return null;
-  }
-
-  showBook(bookId: string): void {
-    this.router.navigate([`/books/${bookId}`]);
-  }
-
-  private setZodErrors(issues: Array<{ path: (string | number)[]; message: string }>) {
-    Object.keys(this.form.controls).forEach((key) => {
-      this.form.controls[key].setErrors(null);
-    });
-
-    for (const issue of issues) {
-      const controlName = issue.path[0];
-      if (typeof controlName === 'string' && this.form.controls[controlName]) {
-        this.form.controls[controlName].setErrors({ zod: issue.message });
-      }
-    }
+ */
   }
 }

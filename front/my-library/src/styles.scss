@@ -35,6 +35,12 @@ body {
   margin: 0;
 }
 
+.big-dialog .mat-dialog-container {
+  padding: 0;
+  height: 70vh;
+  border-radius: 0;
+}
+
 @layer utilities {
   @keyframes spin-carousel-8 {
     0% {
