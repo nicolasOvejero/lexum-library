@@ -87,10 +87,7 @@ export class BookDetails implements OnInit {
       width: '70vw',
       maxWidth: '70vw',
       panelClass: 'full-screen-dialog',
-      data: {
-        ...this.book,
-        authors: this.book?.authors.map(({ firstname, lastname }) => `${firstname} ${lastname}`).join(', ')
-      },
+      data: this.book,
     });
 
     dialogRef.afterClosed().subscribe((result) => {
@@ -99,7 +96,6 @@ export class BookDetails implements OnInit {
           .updateBook({
             id: this.book?.id,
             ...result,
-            authors: result.authors.split(',').map((v: string) => ({ firstname: v } as Author))
           })
           .pipe(
             first(),

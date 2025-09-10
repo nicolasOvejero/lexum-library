@@ -2,7 +2,6 @@ package com.nicolas.my_library.mappers;
 
 import com.nicolas.my_library.dto.AuthorDTO;
 import com.nicolas.my_library.dto.BookDTO;
-import com.nicolas.my_library.entities.Author;
 import com.nicolas.my_library.entities.Book;
 import org.springframework.stereotype.Component;
 
@@ -35,11 +34,6 @@ public class BookMapper {
         book.setSummary(dto.getSummary());
         book.setNb_pages(dto.getNbPages());
         book.setPublishDate(dto.getPublishDate());
-
-        final List<Author> authors = dto.getAuthors().stream()
-                .map(a -> AuthorMapper.authorToEntity(a, book))
-                .toList();
-        book.setAuthors(authors);
 
         return book;
     }

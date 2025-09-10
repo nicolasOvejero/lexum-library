@@ -15,17 +15,19 @@ import java.util.stream.Collectors;
 
 @Service
 public class BookService {
-   private final BookRepository bookRepository;
+    private final BookRepository bookRepository;
+    private final AuthorService authorService;
 
     public BookService(
-        BookRepository bookRepository
+        final BookRepository bookRepository,
+        final AuthorService authorService
     ) {
         this.bookRepository = bookRepository;
+        this.authorService = authorService;
     }
 
     public List<BookDTO> getBooks() {
         final List<Book> booksInDb = bookRepository.findAll();
-        System.out.println(booksInDb.get(0).toString());
 
         return booksInDb
                 .stream()
@@ -42,7 +44,15 @@ public class BookService {
     }
 
     public BookDTO createBook(BookDTO book) {
-        final Book bookInDb = bookRepository.save(BookMapper.toEntity(book));
+        final Book bookEntity = BookMapper.toEntity(book);
+
+        final List<Author> authors = book.getAuthors().stream()
+                .map(this.authorService::getAuthor)
+                .collect(Collectors.toList());
+        bookEntity.setAuthors(authors);
+        authors.forEach(author -> author.setBook(bookEntity));
+
+        final Book bookInDb = bookRepository.save(bookEntity);
 
         return BookMapper.toDTO(bookInDb);
     }
@@ -57,11 +67,10 @@ public class BookService {
         bookInDb.setNb_pages(book.getNbPages());
         bookInDb.setPublishDate(book.getPublishDate());
 
-        final List<Author> authors = book.getAuthors()
-                .stream()
-                .map((author) -> AuthorMapper.authorToEntity(author, bookInDb))
-                .collect(Collectors.toCollection(ArrayList::new));
-
+        final List<Author> authors = book.getAuthors().stream()
+                .map(this.authorService::getAuthor)
+                .toList();
+        authors.forEach(author -> author.setBook(bookInDb));
         bookInDb.getAuthors().clear();
         bookInDb.getAuthors().addAll(authors);
 

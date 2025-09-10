@@ -3,11 +3,11 @@ import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/
 import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from '@angular/material/datepicker';
 import {MatFormField, MatHint, MatSuffix} from '@angular/material/form-field';
 import {MatInput, MatLabel} from '@angular/material/input';
-import {MatButton} from '@angular/material/button';
-import {Component, inject} from '@angular/core';
+import {MatButton, MatFabButton} from '@angular/material/button';
+import {Component, inject, OnInit} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {
-  MAT_DIALOG_DATA,
+  MAT_DIALOG_DATA, MatDialog,
   MatDialogActions,
   MatDialogContent,
   MatDialogRef,
@@ -15,6 +15,12 @@ import {
 } from '@angular/material/dialog';
 import {bookSchema} from '../../books/schemas/add-book-schema';
 import {provideNativeDateAdapter} from '@angular/material/core';
+import {AuthorsService} from '../../authors/services/authors.service';
+import {Author} from '../../authors/author.interface';
+import {first} from 'rxjs';
+import {MatSelectModule} from '@angular/material/select';
+import {MatIconModule} from '@angular/material/icon';
+import {PopupAuthor} from '../popup-author/popup-author';
 
 @Component({
   selector: 'app-popup',
@@ -33,48 +39,85 @@ import {provideNativeDateAdapter} from '@angular/material/core';
     MatButton,
     MatDialogActions,
     MatDialogTitle,
-    MatDialogContent
+    MatDialogContent,
+    MatSelectModule,
+    MatIconModule,
+    MatFabButton,
   ],
   providers: [
+    AuthorsService,
     provideNativeDateAdapter(),
   ],
   templateUrl: './popup.html',
   styleUrl: './popup.scss'
 })
-export class Popup {
+export class Popup implements OnInit {
   readonly dialogRef = inject(MatDialogRef<Popup>);
   readonly data = inject<any>(MAT_DIALOG_DATA);
+  readonly dialog = inject(MatDialog);
+
+  authors: Author[] = [];
 
   form: FormGroup;
 
   constructor(
-    private fb: FormBuilder,
+    private readonly fb: FormBuilder,
+    private readonly authorsService: AuthorsService,
   ) {
     this.form = this.fb.group({
-      title: [this.data.title, [Validators.required]],
-      authors: [this.data.authors, [Validators.required]],
-      publishDate: [this.data.publishDate, [Validators.required]],
-      summary: [this.data.summary, [Validators.required]],
-      nbPages: [this.data.nbPages, [Validators.required]],
+      title: [this.data?.title, [Validators.required]],
+      authors: [this.data?.authors.map(({ id }: { id: string }) => id) || [], [Validators.required]],
+      publishDate: [this.data?.publishDate, [Validators.required]],
+      summary: [this.data?.summary, [Validators.required]],
+      nbPages: [this.data?.nbPages, [Validators.required]],
     });
+  }
+
+  ngOnInit() {
+    this.authorsService.getAuthors()
+      .pipe(
+        first(),
+      )
+      .subscribe((authors: Author[]) => this.authors = authors);
   }
 
   submitForm(): void {
     if (this.form.invalid) {
       return;
     }
-    const result = bookSchema.safeParse(this.form.value);
-
-    if (!result.success) {
-      this.setZodErrors(result.error.issues);
-      return;
-    }
-
-    this.dialogRef.close(this.form.value);
+    /* TODO
+        const result = bookSchema.safeParse(this.form.value);
+        if (!result.success) {
+          this.setZodErrors(result.error.issues);
+          return;
+        }
+    */
+    this.dialogRef.close({
+      ...this.form.value,
+      authors: this.form.value
+        .authors
+        .map((authorsId: string) =>
+          this.authors.find(({ id }) => authorsId === id)
+        ),
+    });
   }
 
   onNoClick(): void {
     this.dialogRef.close();
+  }
+
+  addAuthor(): void {
+    const dialogRef = this.dialog.open(PopupAuthor);
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.authors.push({
+          id: `new-id-${Date.now()}`,
+          ...result,
+        });
+      }
+      console.log('The dialog was closed', result);
+    });
   }
 
   private setZodErrors(issues: Array<{ path: (string | number)[]; message: string }>) {

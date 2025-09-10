@@ -1,0 +1,19 @@
+<h2 mat-dialog-title>Add a author</h2>
+<form novalidate [formGroup]="form" (ngSubmit)="submitForm()">
+  <mat-dialog-content>
+    <div class="flex flex-col gap-4">
+      <mat-form-field class="flex-1">
+        <mat-label>Firstname</mat-label>
+        <input matInput formControlName="firstname" placeholder="Firstname">
+      </mat-form-field>
+      <mat-form-field class="flex-1">
+        <mat-label>Lastname</mat-label>
+        <input matInput formControlName="lastname" placeholder="Lastname">
+      </mat-form-field>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button matButton (click)="onNoClick()" type="submit">Cancel</button>
+    <button mat-raised-button cdkFocusInitial [disabled]="form.invalid">Add new author</button>
+  </mat-dialog-actions>
+</form>

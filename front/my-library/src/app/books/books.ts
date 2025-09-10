@@ -76,10 +76,7 @@ export class Books implements OnInit {
 
   private saveBook(result: any): void {
     this.booksService
-      .saveBook({
-        ...result,
-        authors: result.authors.split(',').map((v: string) => ({ firstname: v } as Author))
-      })
+      .saveBook(result)
       .pipe(
         first(),
       )

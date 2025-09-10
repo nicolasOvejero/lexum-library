@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>Add a new bok</h2>
+<h2 mat-dialog-title>Add a new book</h2>
 <form class="flex flex-col gap-4" novalidate [formGroup]="form" (ngSubmit)="submitForm()">
   <mat-dialog-content>
     <div class="flex flex-col">
@@ -22,8 +22,15 @@
       <div class="flex gap-4">
         <mat-form-field class="flex-1">
           <mat-label>Authors (separate by coma)</mat-label>
-          <input matInput formControlName="authors" placeholder="Authors (separate by coma)">
+          <mat-select formControlName="authors" multiple>
+            @for (author of authors; track author) {
+              <mat-option [value]="author.id">{{ author.firstname }} {{ author.lastname }}</mat-option>
+            }
+          </mat-select>
         </mat-form-field>
+        <button matFab (click)="addAuthor()" type="button">
+          <mat-icon>add</mat-icon>
+        </button>
       </div>
       <mat-form-field class="flex-1">
         <mat-label>Summary</mat-label>
