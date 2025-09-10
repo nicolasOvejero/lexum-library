@@ -6,11 +6,15 @@ import {ActivatedRoute} from '@angular/router';
 import {Author} from '../authors/author.interface';
 import {DatePipe, Location} from '@angular/common';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {MatButtonModule} from '@angular/material/button';
+import {Popup} from '../components/popup/popup';
+import {MatDialog} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-book-details',
   imports: [
-    DatePipe
+    DatePipe,
+    MatButtonModule
   ],
   providers: [
     BooksService,
@@ -22,6 +26,7 @@ export class BookDetails implements OnInit {
   book: Book | null = null;
 
   private _snackBar = inject(MatSnackBar);
+  readonly dialog = inject(MatDialog);
 
   constructor(
     private readonly booksService: BooksService,
@@ -75,5 +80,39 @@ export class BookDetails implements OnInit {
           this.location.back();
         }
     );
+  }
+
+  updateBook(): void {
+    const dialogRef = this.dialog.open(Popup, {
+      width: '70vw',
+      maxWidth: '70vw',
+      panelClass: 'full-screen-dialog',
+      data: {
+        ...this.book,
+        authors: this.book?.authors.map(({ firstname, lastname }) => `${firstname} ${lastname}`).join(', ')
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.booksService
+          .updateBook({
+            id: this.book?.id,
+            ...result,
+            authors: result.authors.split(',').map((v: string) => ({ firstname: v } as Author))
+          })
+          .pipe(
+            first(),
+          )
+          .subscribe((book: Book) => {
+            this.book = book;
+            this._snackBar.open('Book updated', undefined, {
+              duration: 3000,
+              horizontalPosition: 'right',
+              verticalPosition: 'top',
+            });
+          });
+      }
+    });
   }
 }

@@ -62,7 +62,10 @@ export class Books implements OnInit {
       panelClass: 'full-screen-dialog'
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.saveBook(result);
+      }
       console.log('The dialog was closed', result);
     });
   }
@@ -71,25 +74,22 @@ export class Books implements OnInit {
     this.router.navigate([`/books/${bookId}`]);
   }
 
-  private saveBook(): void {
-/*
+  private saveBook(result: any): void {
     this.booksService
       .saveBook({
-        ...result.data,
-        authors: result.data.authors.split(',').map((v) => ({ firstname: v } as Author))
+        ...result,
+        authors: result.authors.split(',').map((v: string) => ({ firstname: v } as Author))
       })
       .pipe(
         first(),
       )
       .subscribe((book: Book) => {
         this.books.push(book);
-        this.showPopup = false;
         this._snackBar.open('Book added', undefined, {
           duration: 3000,
           horizontalPosition: 'right',
           verticalPosition: 'top',
         });
       });
- */
   }
 }

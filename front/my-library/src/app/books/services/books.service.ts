@@ -27,4 +27,11 @@ export class BooksService {
       newBook
     );
   }
+
+  updateBook(book: Partial<Book>): Observable<Book> {
+    return this.http.put<Book>(
+      `${this.apiUrl}/books/${book.id}`,
+      book
+    );
+  }
 }

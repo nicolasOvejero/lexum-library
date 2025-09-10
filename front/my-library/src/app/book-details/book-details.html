@@ -1,7 +1,10 @@
 <article class="h-[80vh] w-[50vw] overflow-auto mx-auto flex flex-col gap-4">
-  <section class="w-full">
-    <button class="text-red-500 px-4 py-2 rounded-lg border border-red-500 hover:cursor-pointer" (click)="deleteBook()">
+  <section class="w-full flex gap-4">
+    <button mat-raised-button matButton="outlined" color="error" (click)="deleteBook()">
       Delete this book
+    </button>
+    <button mat-raised-button matButton="outlined" (click)="updateBook()">
+      Update this book
     </button>
   </section>
   <section>

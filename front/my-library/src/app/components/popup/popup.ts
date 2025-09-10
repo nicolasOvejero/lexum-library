@@ -51,11 +51,11 @@ export class Popup {
     private fb: FormBuilder,
   ) {
     this.form = this.fb.group({
-      title: ['', [Validators.required]],
-      authors: ['', [Validators.required]],
-      publishDate: ['', [Validators.required]],
-      summary: ['', [Validators.required]],
-      nbPages: ['', [Validators.required]],
+      title: [this.data.title, [Validators.required]],
+      authors: [this.data.authors, [Validators.required]],
+      publishDate: [this.data.publishDate, [Validators.required]],
+      summary: [this.data.summary, [Validators.required]],
+      nbPages: [this.data.nbPages, [Validators.required]],
     });
   }
 
