@@ -4,12 +4,10 @@ import com.nicolas.my_library.dto.BookDTO;
 import com.nicolas.my_library.entities.Author;
 import com.nicolas.my_library.entities.Book;
 import com.nicolas.my_library.exceptions.BookNotFoundException;
-import com.nicolas.my_library.mappers.AuthorMapper;
 import com.nicolas.my_library.mappers.BookMapper;
 import com.nicolas.my_library.repositories.BookRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

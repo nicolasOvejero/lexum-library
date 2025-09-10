@@ -2,7 +2,6 @@ package com.nicolas.my_library.services;
 
 import com.nicolas.my_library.dto.AuthorDTO;
 import com.nicolas.my_library.entities.Author;
-import com.nicolas.my_library.entities.Book;
 import com.nicolas.my_library.mappers.AuthorMapper;
 import com.nicolas.my_library.repositories.AuthorRepository;
 import jakarta.persistence.EntityNotFoundException;
