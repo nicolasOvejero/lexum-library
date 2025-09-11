@@ -1,8 +1,11 @@
 package com.nicolas.my_library.controllers;
 
+import com.nicolas.my_library.dto.AuthorBooksDTO;
 import com.nicolas.my_library.dto.AuthorDTO;
+import com.nicolas.my_library.exceptions.InvalidParamsException;
 import com.nicolas.my_library.services.AuthorService;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -18,5 +21,14 @@ public class AuthorController {
     @GetMapping(value = "/authors")
     public List<AuthorDTO> getAuthors() {
         return this.authorService.getAuthors();
+    }
+
+    @GetMapping(value = "/authors/{id}")
+    public AuthorBooksDTO getAuthor(@PathVariable String id) {
+        if (id == null || id.isBlank()) {
+            throw new InvalidParamsException();
+        }
+
+        return this.authorService.getAuthorWithBooks(id);
     }
 }

@@ -18,10 +18,12 @@ public class BookMapper {
         dto.setNbPages(book.getNb_pages());
         dto.setPublishDate(book.getPublishDate());
 
-        final List<AuthorDTO> authorDTOs = book.getAuthors().stream()
-                .map(AuthorMapper::authorToDTO)
-                .toList();
-        dto.setAuthors(authorDTOs);
+        if (book.getAuthors() != null && !book.getAuthors().isEmpty()) {
+            final List<AuthorDTO> authorDTOs = book.getAuthors().stream()
+                    .map(AuthorMapper::authorToDTO)
+                    .toList();
+            dto.setAuthors(authorDTOs);
+        }
 
         return dto;
     }

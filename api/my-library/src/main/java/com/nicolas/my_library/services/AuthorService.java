@@ -1,10 +1,11 @@
 package com.nicolas.my_library.services;
 
+import com.nicolas.my_library.dto.AuthorBooksDTO;
 import com.nicolas.my_library.dto.AuthorDTO;
 import com.nicolas.my_library.entities.Author;
+import com.nicolas.my_library.exceptions.AuthorNotFoundException;
 import com.nicolas.my_library.mappers.AuthorMapper;
 import com.nicolas.my_library.repositories.AuthorRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,7 +32,7 @@ public class AuthorService {
     public Author getAuthor(AuthorDTO dto) {
         if (dto.getId() != null) {
             return authorRepository.findById(dto.getId())
-                    .orElseThrow(() -> new EntityNotFoundException("Author not found : " + dto.getId()));
+                    .orElseThrow(() -> new AuthorNotFoundException(dto.getId()));
         } else {
             final Author author = new Author();
 
@@ -40,5 +41,12 @@ public class AuthorService {
 
             return author;
         }
+    }
+
+    public AuthorBooksDTO getAuthorWithBooks(final String id) {
+         final Author author = authorRepository.findByIdWithBooks(id)
+                .orElseThrow(() -> new AuthorNotFoundException(id));
+
+        return AuthorMapper.authorBooksToDTO(author);
     }
 }

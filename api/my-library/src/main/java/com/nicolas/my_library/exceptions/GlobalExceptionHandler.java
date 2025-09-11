@@ -20,4 +20,16 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(errorBody);
     }
+
+    @ExceptionHandler(AuthorNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleBookNotFound(AuthorNotFoundException ex) {
+        Map<String, Object> errorBody = Map.of(
+                "status", 404,
+                "error", "NOT_FOUND",
+                "message", ex.getMessage()
+        );
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(errorBody);
+    }
 }

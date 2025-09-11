@@ -11,6 +11,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatDialog} from '@angular/material/dialog';
+import {BookCard} from '../components/book-card/book-card';
 
 @Component({
   selector: 'app-books',
@@ -19,6 +20,7 @@ import {MatDialog} from '@angular/material/dialog';
     MatFormFieldModule,
     MatInputModule,
     MatDatepickerModule,
+    BookCard,
   ],
   providers: [
     BooksService,
@@ -34,7 +36,6 @@ export class Books implements OnInit {
 
   constructor(
     private booksService: BooksService,
-    private router: Router
   ) {
   }
 
@@ -44,15 +45,19 @@ export class Books implements OnInit {
       .pipe(
         first(),
       )
-      .subscribe((books: Book[]) => {
-        this.books = books;
+      .subscribe({
+        next: (books: Book[]) => {
+          this.books = books;
+        },
+        error: (error) => {
+          this._snackBar.open('Impossible to retrieve books', undefined, {
+            duration: 3000,
+            horizontalPosition: 'right',
+            verticalPosition: 'top',
+          });
+          console.log(error)
+        }
       });
-  }
-
-  mapAuthors(authors: Author[]): String {
-    return authors
-      .map((author: Author) => `${author.firstname} ${author.lastname}`)
-      .join(', ');
   }
 
   openPopup(): void {
@@ -66,12 +71,7 @@ export class Books implements OnInit {
       if (result) {
         this.saveBook(result);
       }
-      console.log('The dialog was closed', result);
     });
-  }
-
-  showBook(bookId: string): void {
-    this.router.navigate([`/books/${bookId}`]);
   }
 
   private saveBook(result: any): void {
@@ -80,13 +80,23 @@ export class Books implements OnInit {
       .pipe(
         first(),
       )
-      .subscribe((book: Book) => {
-        this.books.push(book);
-        this._snackBar.open('Book added', undefined, {
-          duration: 3000,
-          horizontalPosition: 'right',
-          verticalPosition: 'top',
-        });
+      .subscribe({
+        next: (book: Book) => {
+          this.books.push(book);
+          this._snackBar.open('Book added', undefined, {
+            duration: 3000,
+            horizontalPosition: 'right',
+            verticalPosition: 'top',
+          });
+        },
+        error: (error) => {
+          this._snackBar.open('Book not saved, an error happened', undefined, {
+            duration: 3000,
+            horizontalPosition: 'right',
+            verticalPosition: 'top',
+          });
+          console.log(error)
+        },
       });
   }
 }

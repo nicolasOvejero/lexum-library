@@ -9,4 +9,8 @@ export const serverRoutes: ServerRoute[] = [
     path: 'books/:id',
     renderMode: RenderMode.Server,
   },
+  {
+    path: 'authors/:id',
+    renderMode: RenderMode.Server,
+  },
 ];

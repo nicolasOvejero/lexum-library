@@ -1,8 +1,5 @@
 import { Routes } from '@angular/router';
 import { Home } from './home/home';
-import { Books } from './books/books';
-import { Authors } from './authors/authors';
-import {BookDetails} from './book-details/book-details';
 
 export const routes: Routes = [
   {
@@ -11,18 +8,22 @@ export const routes: Routes = [
   },
   {
     path: 'books',
-    component: Books,
+    loadComponent: () => import('./books/books').then(m => m.Books),
   },
   {
     path: 'books/:id',
-    component: BookDetails,
+    loadComponent: () => import('./book-details/book-details').then(m => m.BookDetails),
     data: {
       renderMode: 'server',
     },
   },
   {
     path: 'authors',
-    component: Authors,
+    loadComponent: () => import('./authors/authors').then(m => m.AuthorsComponent),
+  },
+  {
+    path: 'authors/:id',
+    loadComponent: () => import('./author-details/author-details').then(m => m.AuthorDetails),
     data: {
       renderMode: 'server',
     },

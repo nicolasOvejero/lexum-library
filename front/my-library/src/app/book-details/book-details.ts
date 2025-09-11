@@ -14,7 +14,7 @@ import {MatDialog} from '@angular/material/dialog';
   selector: 'app-book-details',
   imports: [
     DatePipe,
-    MatButtonModule
+    MatButtonModule,
   ],
   providers: [
     BooksService,
@@ -43,8 +43,18 @@ export class BookDetails implements OnInit {
         ),
         first(),
       )
-      .subscribe((book: Book) => {
-        this.book = book;
+      .subscribe({
+        next: (book: Book) => {
+          this.book = book;
+        },
+        error: (error) => {
+          this._snackBar.open('Impossible to retrieve book details', undefined, {
+            duration: 3000,
+            horizontalPosition: 'right',
+            verticalPosition: 'top',
+          });
+          console.log(error)
+        },
       });
   }
 
@@ -69,17 +79,25 @@ export class BookDetails implements OnInit {
       .deleteBook(this.book.id)
       .pipe(
         first(),
-      ).subscribe(
-        () => {
-          console.log('Livre supprimé')
+      )
+      .subscribe({
+        next: () => {
           this._snackBar.open('Book removed', undefined, {
             duration: 3000,
             horizontalPosition: 'right',
             verticalPosition: 'top',
           });
           this.location.back();
-        }
-    );
+        },
+        error: (error) => {
+          this._snackBar.open('Impossible to remove the book', undefined, {
+            duration: 3000,
+            horizontalPosition: 'right',
+            verticalPosition: 'top',
+          });
+          console.log(error)
+        },
+      });
   }
 
   updateBook(): void {
@@ -100,13 +118,23 @@ export class BookDetails implements OnInit {
           .pipe(
             first(),
           )
-          .subscribe((book: Book) => {
-            this.book = book;
-            this._snackBar.open('Book updated', undefined, {
-              duration: 3000,
-              horizontalPosition: 'right',
-              verticalPosition: 'top',
-            });
+          .subscribe({
+            next: (book: Book) => {
+              this.book = book;
+              this._snackBar.open('Book updated', undefined, {
+                duration: 3000,
+                horizontalPosition: 'right',
+                verticalPosition: 'top',
+              });
+            },
+            error: (error) => {
+              this._snackBar.open('Impossible to update the book', undefined, {
+                duration: 3000,
+                horizontalPosition: 'right',
+                verticalPosition: 'top',
+              });
+              console.log(error)
+            },
           });
       }
     });

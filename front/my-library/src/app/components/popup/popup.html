@@ -7,6 +7,12 @@
           <mat-label>Book title</mat-label>
           <input matInput formControlName="title" placeholder="Book title">
         </mat-form-field>
+        <button matFab extended (click)="findInformationOnBook()" type="button">
+          <mat-icon>add</mat-icon>
+          Ask AI to find information based on book title
+        </button>
+      </div>
+      <div class="flex gap-4">
         <mat-form-field class="flex-1">
           <mat-label>Publication date</mat-label>
           <input matInput [matDatepicker]="picker" formControlName="publishDate">
@@ -18,8 +24,6 @@
           <mat-label>Number of pages</mat-label>
           <input type="number" min="0" matInput formControlName="nbPages" placeholder="Number of pages">
         </mat-form-field>
-      </div>
-      <div class="flex gap-4">
         <mat-form-field class="flex-1">
           <mat-label>Authors (separate by coma)</mat-label>
           <mat-select formControlName="authors" multiple>

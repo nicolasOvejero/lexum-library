@@ -21,6 +21,7 @@ import {first} from 'rxjs';
 import {MatSelectModule} from '@angular/material/select';
 import {MatIconModule} from '@angular/material/icon';
 import {PopupAuthor} from '../popup-author/popup-author';
+import {AiService} from '../services/ai.service';
 
 @Component({
   selector: 'app-popup',
@@ -46,6 +47,7 @@ import {PopupAuthor} from '../popup-author/popup-author';
   ],
   providers: [
     AuthorsService,
+    AiService,
     provideNativeDateAdapter(),
   ],
   templateUrl: './popup.html',
@@ -63,6 +65,7 @@ export class Popup implements OnInit {
   constructor(
     private readonly fb: FormBuilder,
     private readonly authorsService: AuthorsService,
+    private readonly aiService: AiService,
   ) {
     this.form = this.fb.group({
       title: [this.data?.title, [Validators.required]],
@@ -118,6 +121,23 @@ export class Popup implements OnInit {
       }
       console.log('The dialog was closed', result);
     });
+  }
+
+  findInformationOnBook(): void {
+    this.aiService.getBookDescription(
+      this.form.controls['title'].value
+    )
+      .pipe(
+        first(),
+      )
+      .subscribe((description: any) => {
+        this.form.controls['title'].setValue(description.title)
+        this.form.controls['summary'].setValue(description.summary)
+        this.form.controls['publishDate'].setValue(description.publicationDate)
+        this.form.controls['nbPages'].setValue(description.numberOfPages)
+        this.form.controls['authors'].setValue(description.authors)
+      });
+
   }
 
   private setZodErrors(issues: Array<{ path: (string | number)[]; message: string }>) {

@@ -22,4 +22,12 @@ public class AuthorControllerTests {
 
         verify(authorService, times(1)).getAuthors();
     }
+
+    @Test
+    void testGetAuthor() {
+        final AuthorController authorController = new AuthorController(authorService);
+        authorController.getAuthor("test-id");
+
+        verify(authorService, times(1)).getAuthorWithBooks("test-id");
+    }
 }

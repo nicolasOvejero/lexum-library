@@ -1,0 +1,12 @@
+<article class="h-[80vh] w-[50vw] overflow-auto mx-auto">
+  <h1 class="text-4xl font-bold text-neutral-100 mb-2">
+    Library of
+    <span class="capitalize">{{ author?.firstname }}</span>&nbsp;
+    <span class="capitalize">{{ author?.lastname }}</span>
+  </h1>
+  <section class="flex gap-4">
+    @for (book of author?.books; let idx = $index; track idx) {
+      <app-book-card class="w-1/4 h-min" [book]="book"></app-book-card>
+    }
+  </section>
+</article>

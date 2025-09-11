@@ -27,16 +27,6 @@ public class AuthorMock {
     }
 
 
-    public static AuthorDTO getAuthor3() {
-        final AuthorDTO author = new AuthorDTO();
-
-        author.setId("id-test-3");
-        author.setFirstname("firstname-test-3");
-        author.setLastname("lastname-test-3");
-
-        return author;
-    }
-
     public static Author getAuthorEntity1() {
         final Author author = new Author();
 
@@ -58,13 +48,15 @@ public class AuthorMock {
         return author;
     }
 
-
-    public static Author getAuthorEntity3() {
+    public static Author getAuthorWithBookEntity() {
         final Author author = new Author();
 
-        author.setId("id-test-3");
-        author.setFirstname("firstname-test-3");
-        author.setLastname("lastname-test-3");
+        author.setId("id-test");
+        author.setFirstname("firstname-test");
+        author.setLastname("lastname-test");
+        author.setBooks(new ArrayList<>());
+        author.getBooks().add(BookMock.getBookEntity1());
 
         return author;
-    }}
+    }
+}

@@ -1,6 +1,7 @@
 package com.nicolas.my_library.services;
 
 import com.nicolas.my_library.controllers.BookController;
+import com.nicolas.my_library.dto.AuthorBooksDTO;
 import com.nicolas.my_library.dto.AuthorDTO;
 import com.nicolas.my_library.entities.Author;
 import com.nicolas.my_library.mocks.AuthorMock;
@@ -80,6 +81,33 @@ public class AuthorServiceTest {
             verify(authorRepository, times(1)).findById("id-test-1");
             assertEquals("Author not found : id-test-1", e.getMessage());
         }
+    }
 
+    @Test
+    void testGetAuthorWithBookWithId() {
+        final AuthorService authorService = new AuthorService(authorRepository);
+
+        when(authorRepository.findByIdWithBooks("id-test-1")).thenReturn(Optional.of(AuthorMock.getAuthorWithBookEntity()));
+
+        final AuthorBooksDTO authors = authorService.getAuthorWithBooks("id-test-1");
+
+        verify(authorRepository, times(1)).findByIdWithBooks("id-test-1");
+        assertEquals(authors.getId(), AuthorMock.getAuthorWithBookEntity().getId());
+        assertEquals(authors.getLastname(), AuthorMock.getAuthorWithBookEntity().getLastname());
+        assertEquals(authors.getFirstname(), AuthorMock.getAuthorWithBookEntity().getFirstname());
+    }
+
+    @Test
+    void testGetAuthorWithBookThrowError() {
+        final AuthorService authorService = new AuthorService(authorRepository);
+
+        when(authorRepository.findByIdWithBooks("id-test-1")).thenReturn(Optional.empty());
+
+        try {
+            authorService.getAuthorWithBooks("id-test-1");
+        } catch (EntityNotFoundException e) {
+            verify(authorRepository, times(1)).findByIdWithBooks("id-test-1");
+            assertEquals("Author not found : id-test-1", e.getMessage());
+        }
     }
 }
