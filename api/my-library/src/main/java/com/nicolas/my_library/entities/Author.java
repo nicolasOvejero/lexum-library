@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Table(name = "author")
 @Getter
@@ -17,7 +19,6 @@ public class Author {
 
     private String lastname;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "book_id")
-    private Book book;
+    @ManyToMany(mappedBy = "authors")
+    private List<Book> books;
 }

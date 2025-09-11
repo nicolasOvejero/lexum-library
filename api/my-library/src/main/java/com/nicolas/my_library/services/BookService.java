@@ -8,6 +8,7 @@ import com.nicolas.my_library.mappers.BookMapper;
 import com.nicolas.my_library.repositories.BookRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,7 +49,13 @@ public class BookService {
                 .map(this.authorService::getAuthor)
                 .collect(Collectors.toList());
         bookEntity.setAuthors(authors);
-        authors.forEach(author -> author.setBook(bookEntity));
+
+        for (Author author : authors) {
+            if (author.getBooks() == null) {
+                author.setBooks(new ArrayList<>());
+            }
+            author.getBooks().add(bookEntity);
+        }
 
         final Book bookInDb = bookRepository.save(bookEntity);
 
@@ -68,9 +75,21 @@ public class BookService {
         final List<Author> authors = book.getAuthors().stream()
                 .map(this.authorService::getAuthor)
                 .toList();
-        authors.forEach(author -> author.setBook(bookInDb));
-        bookInDb.getAuthors().clear();
-        bookInDb.getAuthors().addAll(authors);
+
+        final List<Author> currentAuthors = new ArrayList<>(bookInDb.getAuthors());
+        for (Author author : currentAuthors) {
+            if (!authors.contains(author)) {
+                bookInDb.getAuthors().remove(author);
+                author.getBooks().remove(bookInDb);
+            }
+        }
+
+        for (Author author : authors) {
+            if (!bookInDb.getAuthors().contains(author)) {
+                bookInDb.getAuthors().add(author);
+                author.getBooks().add(bookInDb); // lien inverse
+            }
+        }
 
         final Book bookSaved = bookRepository.save(bookInDb);
 

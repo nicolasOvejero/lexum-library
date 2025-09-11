@@ -3,6 +3,8 @@ package com.nicolas.my_library.mocks;
 import com.nicolas.my_library.dto.AuthorDTO;
 import com.nicolas.my_library.entities.Author;
 
+import java.util.ArrayList;
+
 public class AuthorMock {
     public static AuthorDTO getAuthor1() {
         final AuthorDTO author = new AuthorDTO();
@@ -41,6 +43,7 @@ public class AuthorMock {
         author.setId("id-test-1");
         author.setFirstname("firstname-test");
         author.setLastname("lastname-test");
+        author.setBooks(new ArrayList<>());
 
         return author;
     }
