@@ -3,10 +3,11 @@ import { Observable } from 'rxjs';
 import { Book } from '../book.interface';
 import {Injectable} from '@angular/core';
 import {Author} from '../../authors/author.interface';
+import {environment} from '../../../environment';
 
 @Injectable()
 export class BooksService {
-  private apiUrl = 'http://localhost:8080/api/books';
+  private apiUrl = `${environment.apiUrl}/books`;
 
   constructor(private http: HttpClient) {}
 

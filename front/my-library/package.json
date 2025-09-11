@@ -4,10 +4,10 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:my-library": "node dist/my-library/server/server.mjs"
+    "serve:ssr:my-library": "node --env-file=.env dist/my-library/server/server.mjs"
   },
   "prettier": {
     "overrides": [

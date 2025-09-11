@@ -5,8 +5,26 @@ import { Authors } from './authors/authors';
 import {BookDetails} from './book-details/book-details';
 
 export const routes: Routes = [
-  { path: '', component: Home },
-  { path: 'books', component: Books },
-  { path: 'books/:id', component: BookDetails },
-  { path: 'authors', component: Authors },
+  {
+    path: '',
+    component: Home,
+  },
+  {
+    path: 'books',
+    component: Books,
+  },
+  {
+    path: 'books/:id',
+    component: BookDetails,
+    data: {
+      renderMode: 'server',
+    },
+  },
+  {
+    path: 'authors',
+    component: Authors,
+    data: {
+      renderMode: 'server',
+    },
+  },
 ];
