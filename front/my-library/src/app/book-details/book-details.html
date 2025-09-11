@@ -1,25 +1,29 @@
 <article class="h-[80vh] w-[50vw] overflow-auto mx-auto flex flex-col gap-4">
-  <section class="w-full flex gap-4">
-    <button mat-raised-button matButton="outlined" color="error" (click)="deleteBook()">
-      Delete this book
-    </button>
-    <button mat-raised-button matButton="outlined" (click)="updateBook()">
-      Update this book
-    </button>
-  </section>
-  <section>
-    <h1 class="text-4xl mb-4 text-neutral-100">
-      {{ book?.title }}
-    </h1>
-    <h3 class="text-xl text-neutral-300">
-      Written by : {{ mapAuthors(book?.authors) }}
-    </h3>
-    <p class="text-md text-neutral-600 mb-4">
-      Release date : {{ book?.publishDate | date:'dd/MM/yyyy' }}
-    </p>
-    <p class="text-md text-neutral-400">
-      Summary : ({{ book?.nbPages }} pages)
-    </p>
-    <p class="text-md text-neutral-400 whitespace-pre-line">{{ book?.summary }}</p>
-  </section>
+  @if (!showErrorPage) {
+    <section class="w-full flex gap-4">
+      <button mat-raised-button matButton="outlined" color="error" (click)="deleteBook()">
+        Delete this book
+      </button>
+      <button mat-raised-button matButton="outlined" (click)="updateBook()">
+        Update this book
+      </button>
+    </section>
+    <section>
+      <h1 class="text-4xl mb-4 text-neutral-100">
+        {{ book?.title }}
+      </h1>
+      <h3 class="text-xl text-neutral-300">
+        Written by : {{ mapAuthors(book?.authors) }}
+      </h3>
+      <p class="text-md text-neutral-600 mb-4">
+        Release date : {{ book?.publishDate | date:'dd/MM/yyyy' }}
+      </p>
+      <p class="text-md text-neutral-400">
+        Summary : ({{ book?.nbPages }} pages)
+      </p>
+      <p class="text-md text-neutral-400 whitespace-pre-line">{{ book?.summary }}</p>
+    </section>
+  } @else {
+    <app-error-404></app-error-404>
+  }
 </article>

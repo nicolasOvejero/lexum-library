@@ -9,12 +9,15 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatButtonModule} from '@angular/material/button';
 import {Popup} from '../components/popup/popup';
 import {MatDialog} from '@angular/material/dialog';
+import { HttpErrorResponse } from '@angular/common/http';
+import {Error404} from '../components/error-404/error-404';
 
 @Component({
   selector: 'app-book-details',
   imports: [
     DatePipe,
     MatButtonModule,
+    Error404,
   ],
   providers: [
     BooksService,
@@ -24,6 +27,8 @@ import {MatDialog} from '@angular/material/dialog';
 })
 export class BookDetails implements OnInit {
   book: Book | null = null;
+
+  showErrorPage: boolean = false;
 
   private _snackBar = inject(MatSnackBar);
   readonly dialog = inject(MatDialog);
@@ -47,7 +52,12 @@ export class BookDetails implements OnInit {
         next: (book: Book) => {
           this.book = book;
         },
-        error: (error) => {
+        error: (error: HttpErrorResponse) => {
+          if (error.status === 404) {
+            this.showErrorPage = true;
+            return;
+          }
+
           this._snackBar.open('Impossible to retrieve book details', undefined, {
             duration: 3000,
             horizontalPosition: 'right',

@@ -5,11 +5,13 @@ import {first, switchMap} from 'rxjs';
 import {AuthorWithBooks} from '../authors/author.interface';
 import {BookCard} from '../components/book-card/book-card';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {Error404} from '../components/error-404/error-404';
 
 @Component({
   selector: 'app-author-details',
   imports: [
     BookCard,
+    Error404,
   ],
   providers: [
     AuthorsService,
@@ -20,6 +22,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 })
 export class AuthorDetails implements OnInit {
   author: AuthorWithBooks | null = null;
+  showErrorPage: boolean = false;
 
   private _snackBar = inject(MatSnackBar);
 
@@ -41,6 +44,11 @@ export class AuthorDetails implements OnInit {
           this.author = authorWithBooks;
         },
         error: (error) => {
+          if (error.status === 404) {
+            this.showErrorPage = true;
+            return;
+          }
+
           this._snackBar.open('Impossible to retrieve authors information', undefined, {
             duration: 3000,
             horizontalPosition: 'right',
