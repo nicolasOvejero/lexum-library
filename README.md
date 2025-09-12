@@ -38,3 +38,15 @@ After you can run `mvn exec:java -Dexec.mainClass="com.nicolas.my_library.MyLibr
 If you don't have docker you can follow the process to install it on your computer here: https://docs.docker.com/engine/install/
 
 After you can run the project with `docker compose up`.
+
+
+## What are the next steps
+
+* We can improve AI prompt to have more information and better response
+* We can add a login part for the edition/deletion/add part. Like basic auth with a JWT token.
+* We can add test on front part E2E, Unit test and Integration tests
+* We can add integration test on API
+* We can improve the responsivity of the website
+* We can add image and link to buy on book model
+* Make pagination
+* Make filter on API side to feet with pagination

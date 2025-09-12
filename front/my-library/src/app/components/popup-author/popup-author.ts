@@ -5,6 +5,7 @@ import {MatError, MatInput, MatLabel} from '@angular/material/input';
 import {MatFormField} from '@angular/material/form-field';
 import {MatButton} from '@angular/material/button';
 import {authorSchema} from './schemas/add-author-schema';
+import {Error} from '../../error';
 
 @Component({
   selector: 'app-popup-author',
@@ -23,7 +24,7 @@ import {authorSchema} from './schemas/add-author-schema';
   templateUrl: './popup-author.html',
   styleUrl: './popup-author.scss'
 })
-export class PopupAuthor {
+export class PopupAuthor extends Error {
   readonly dialogRef = inject(MatDialogRef<PopupAuthor>);
 
   form: FormGroup;
@@ -31,6 +32,7 @@ export class PopupAuthor {
   constructor(
     private readonly fb: FormBuilder,
   ) {
+    super();
     this.form = this.fb.group({
       firstname: ['', [Validators.required]],
       lastname: ['', [Validators.required]],
@@ -44,7 +46,7 @@ export class PopupAuthor {
 
     const result = authorSchema.safeParse(this.form.value);
     if (!result.success) {
-      this.setZodErrors(result.error.issues);
+      super.setZodErrors(this.form, result.error.issues);
       return;
     }
 
@@ -55,18 +57,5 @@ export class PopupAuthor {
 
   onNoClick(): void {
     this.dialogRef.close();
-  }
-
-  private setZodErrors(issues: Array<{ path: (string | number)[]; message: string }>) {
-    Object.keys(this.form.controls).forEach((key) => {
-      this.form.controls[key].setErrors(null);
-    });
-
-    for (const issue of issues) {
-      const controlName = issue.path[0];
-      if (typeof controlName === 'string' && this.form.controls[controlName]) {
-        this.form.controls[controlName].setErrors({ zod: issue.message });
-      }
-    }
   }
 }

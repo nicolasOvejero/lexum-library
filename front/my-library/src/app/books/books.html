@@ -4,6 +4,20 @@
       Add new book
     </button>
   </section>
+  <section class="flex w-full items-center gap-8">
+    <mat-form-field class="flex-1">
+      <mat-label>Filter by title/author</mat-label>
+      <input matInput [formControl]="filter">
+      @if (filter.value) {
+        <button matSuffix matIconButton (click)="clearFilter()">
+          <mat-icon>close</mat-icon>
+        </button>
+      }
+    </mat-form-field>
+    <button matButton="outlined" (click)="filterBook()">
+      Filter
+    </button>
+  </section>
 
   <section class="flex gap-4">
     @for (book of books; let idx = $index; track idx) {

@@ -1,14 +1,15 @@
 package com.nicolas.my_library.services;
 
+import org.springframework.stereotype.Service;
+
 import com.google.genai.Client;
 import com.google.genai.types.GenerateContentResponse;
 import com.google.gson.Gson;
 import com.nicolas.my_library.dto.AiResponse;
-import org.springframework.stereotype.Service;
 
 @Service
 public class AiService {
-    Client client = Client.builder().apiKey("AIzaSyAv9hgnGZA_FQPhBjblGT-hXVQeYgIHLlM").build();
+    Client client = Client.builder().apiKey("").build();
 
     public AiResponse findSummary(String title) {
         final GenerateContentResponse response =

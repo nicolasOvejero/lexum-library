@@ -1,7 +1,7 @@
 import {CdkTextareaAutosize} from '@angular/cdk/text-field';
-import {FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from '@angular/material/datepicker';
-import {MatFormField, MatHint, MatSuffix} from '@angular/material/form-field';
+import {MatFormField, MatSuffix} from '@angular/material/form-field';
 import {MatInput, MatLabel} from '@angular/material/input';
 import {MatButton, MatFabButton} from '@angular/material/button';
 import {Component, inject, OnInit} from '@angular/core';
@@ -22,7 +22,7 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatIconModule} from '@angular/material/icon';
 import {PopupAuthor} from '../popup-author/popup-author';
 import {AiService} from '../services/ai.service';
-import {JsonPipe} from '@angular/common';
+import {Error} from '../../error';
 
 @Component({
   selector: 'app-popup',
@@ -33,7 +33,6 @@ import {JsonPipe} from '@angular/common';
     MatDatepickerInput,
     MatDatepickerToggle,
     MatFormField,
-    MatHint,
     MatInput,
     MatLabel,
     MatSuffix,
@@ -45,7 +44,6 @@ import {JsonPipe} from '@angular/common';
     MatSelectModule,
     MatIconModule,
     MatFabButton,
-    JsonPipe,
   ],
   providers: [
     AuthorsService,
@@ -55,7 +53,7 @@ import {JsonPipe} from '@angular/common';
   templateUrl: './popup.html',
   styleUrl: './popup.scss'
 })
-export class Popup implements OnInit {
+export class Popup extends Error implements OnInit {
   readonly dialogRef = inject(MatDialogRef<Popup>);
   readonly data = inject<any>(MAT_DIALOG_DATA);
   readonly dialog = inject(MatDialog);
@@ -71,6 +69,7 @@ export class Popup implements OnInit {
     private readonly authorsService: AuthorsService,
     private readonly aiService: AiService,
   ) {
+    super();
     this.form = this.fb.group({
       title: [this.data?.title, [Validators.required]],
       authors: [
@@ -98,7 +97,7 @@ export class Popup implements OnInit {
 
     const result = bookSchema.safeParse(this.form.value);
     if (!result.success) {
-      this.setZodErrors(result.error.issues);
+      super.setZodErrors(this.form, result.error.issues);
       return;
     }
 
@@ -153,18 +152,5 @@ export class Popup implements OnInit {
         this.isAiLoading = false;
       });
 
-  }
-
-  private setZodErrors(issues: Array<{ path: (string | number)[]; message: string }>) {
-    Object.keys(this.form.controls).forEach((key) => {
-      this.form.controls[key].setErrors(null);
-    });
-
-    for (const issue of issues) {
-      const controlName = issue.path[0];
-      if (typeof controlName === 'string' && this.form.controls[controlName]) {
-        this.form.controls[controlName].setErrors({ zod: issue.message });
-      }
-    }
   }
 }
