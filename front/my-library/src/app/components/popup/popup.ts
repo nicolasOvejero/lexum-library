@@ -1,5 +1,5 @@
 import {CdkTextareaAutosize} from '@angular/cdk/text-field';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from '@angular/material/datepicker';
 import {MatFormField, MatHint, MatSuffix} from '@angular/material/form-field';
 import {MatInput, MatLabel} from '@angular/material/input';
@@ -13,7 +13,7 @@ import {
   MatDialogRef,
   MatDialogTitle,
 } from '@angular/material/dialog';
-import {bookSchema} from '../../books/schemas/add-book-schema';
+import {bookSchema} from './schemas/add-book-schema';
 import {provideNativeDateAdapter} from '@angular/material/core';
 import {AuthorsService} from '../../authors/services/authors.service';
 import {Author} from '../../authors/author.interface';
@@ -22,6 +22,7 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatIconModule} from '@angular/material/icon';
 import {PopupAuthor} from '../popup-author/popup-author';
 import {AiService} from '../services/ai.service';
+import {JsonPipe} from '@angular/common';
 
 @Component({
   selector: 'app-popup',
@@ -44,6 +45,7 @@ import {AiService} from '../services/ai.service';
     MatSelectModule,
     MatIconModule,
     MatFabButton,
+    JsonPipe,
   ],
   providers: [
     AuthorsService,
@@ -60,6 +62,8 @@ export class Popup implements OnInit {
 
   authors: Author[] = [];
 
+  isAiLoading: boolean = false;
+
   form: FormGroup;
 
   constructor(
@@ -69,7 +73,10 @@ export class Popup implements OnInit {
   ) {
     this.form = this.fb.group({
       title: [this.data?.title, [Validators.required]],
-      authors: [this.data?.authors.map(({ id }: { id: string }) => id) || [], [Validators.required]],
+      authors: [
+        this.data?.authors?.map((a: Author) => a.id) || [],
+        [Validators.required],
+      ],
       publishDate: [this.data?.publishDate, [Validators.required]],
       summary: [this.data?.summary, [Validators.required]],
       nbPages: [this.data?.nbPages, [Validators.required]],
@@ -88,13 +95,13 @@ export class Popup implements OnInit {
     if (this.form.invalid) {
       return;
     }
-    /* TODO
-        const result = bookSchema.safeParse(this.form.value);
-        if (!result.success) {
-          this.setZodErrors(result.error.issues);
-          return;
-        }
-    */
+
+    const result = bookSchema.safeParse(this.form.value);
+    if (!result.success) {
+      this.setZodErrors(result.error.issues);
+      return;
+    }
+
     this.dialogRef.close({
       ...this.form.value,
       authors: this.form.value
@@ -124,18 +131,26 @@ export class Popup implements OnInit {
   }
 
   findInformationOnBook(): void {
+    this.isAiLoading = true;
     this.aiService.getBookDescription(
       this.form.controls['title'].value
     )
       .pipe(
         first(),
       )
-      .subscribe((description: any) => {
-        this.form.controls['title'].setValue(description.title)
-        this.form.controls['summary'].setValue(description.summary)
-        this.form.controls['publishDate'].setValue(description.publicationDate)
-        this.form.controls['nbPages'].setValue(description.numberOfPages)
-        this.form.controls['authors'].setValue(description.authors)
+      .subscribe((aiResponse: any) => {
+        const authors: Author[] = aiResponse.authors?.map((author: any, index: number) => ({
+          ...author,
+          id: `new-id-${index}`,
+        }))
+        this.authors.push(...authors);
+
+        this.form.patchValue({
+          summary: aiResponse.summary,
+          authors: authors.map(({ id }: Author) => id),
+        });
+
+        this.isAiLoading = false;
       });
 
   }

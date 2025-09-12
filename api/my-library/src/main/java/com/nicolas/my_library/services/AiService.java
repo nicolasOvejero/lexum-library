@@ -14,11 +14,12 @@ public class AiService {
         final GenerateContentResponse response =
                 client.models.generateContent(
                         "gemini-2.5-flash",
-                        "Can you find me the official summary of the book : \"" + title + "\" and the publication date with name publicationDate and the number of pages with name numberOfPages and all authors in object firstname (named firstName) and lastname (named lastName). Everything in json format. Return just the json",
+                        "Can you find for the book \"" + title + "\" official summary " +
+                                "and all authors in object firstname (named firstname) and lastname (named lastname). " +
+                                "Everything in json format. Return just the json",
                         null
                 );
 
-        System.out.println("Can you find me the official summary of the book : \"" + title + "\" and the publication date with name publicationDate and the number of pages with name numberOfPages and all authors in object firstname (named firstName) and lastname (named lastName). Everything in json format. Return just the json");
         final String textJson = response.text()
                 .replace("```", "")
                 .replace("json", "");

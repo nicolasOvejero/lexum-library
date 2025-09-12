@@ -10,10 +10,7 @@ import java.util.List;
 @Getter
 @Setter
 public class AiResponse {
-    String title;
     String summary;
-    String publicationDate;
-    String numberOfPages;
-    List<AiAuthors> authors;
+    List<AuthorDTO> authors;
 }
 

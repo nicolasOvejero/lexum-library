@@ -5,10 +5,20 @@
       <mat-form-field class="flex-1">
         <mat-label>Firstname</mat-label>
         <input matInput formControlName="firstname" placeholder="Firstname">
+        @if (form.controls['firstname'].hasError('zod')) {
+          <mat-error>
+            {{ form.controls['firstname'].getError('zod').valueOf() }}
+          </mat-error>
+        }
       </mat-form-field>
       <mat-form-field class="flex-1">
         <mat-label>Lastname</mat-label>
         <input matInput formControlName="lastname" placeholder="Lastname">
+        @if (form.controls['lastname'].hasError('zod')) {
+          <mat-error>
+            {{ form.controls['lastname'].getError('zod').valueOf() }}
+          </mat-error>
+        }
       </mat-form-field>
     </div>
   </mat-dialog-content>

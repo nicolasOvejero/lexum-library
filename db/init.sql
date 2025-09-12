@@ -19,7 +19,7 @@ SET @book2_id = UUID();
 
 INSERT INTO book (id, title, publish_date, summary, nb_pages)
 VALUES
-    (@book1_id, "Mon super livre", CURDATE(), "Ceci est un super livre avec des mots et même des lettres", 1),
+    (@book1_id, "Mon super livre", CURDATE(), "Ceci est un super livre avec des mots et meme des lettres", 1),
     (@book2_id, "Mon super livre 2", CURDATE(), "Ceci est un super livre avec des mots et même des lettres et aussi des chiffres", 2);
 
 

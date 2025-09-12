@@ -6,23 +6,37 @@
         <mat-form-field class="flex-1">
           <mat-label>Book title</mat-label>
           <input matInput formControlName="title" placeholder="Book title">
+          @if (form.controls['title'].hasError('zod')) {
+            <mat-error>
+              {{ form.controls['title'].getError('zod').valueOf() }}
+            </mat-error>
+          }
         </mat-form-field>
-        <button matFab extended (click)="findInformationOnBook()" type="button">
+        <button matFab extended [disabled]="isAiLoading" (click)="findInformationOnBook()" type="button">
           <mat-icon>add</mat-icon>
-          Ask AI to find information based on book title
+          {{ isAiLoading ? 'Loading ...' : 'Ask AI to find information based on book title' }}
         </button>
       </div>
       <div class="flex gap-4">
         <mat-form-field class="flex-1">
           <mat-label>Publication date</mat-label>
           <input matInput [matDatepicker]="picker" formControlName="publishDate">
-          <mat-hint>DD/MM/YYYY</mat-hint>
           <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
+          @if (form.controls['publishDate'].hasError('zod')) {
+            <mat-error>
+              {{ form.controls['publishDate'].getError('zod').valueOf() }}
+            </mat-error>
+          }
         </mat-form-field>
         <mat-form-field class="flex-1">
           <mat-label>Number of pages</mat-label>
           <input type="number" min="0" matInput formControlName="nbPages" placeholder="Number of pages">
+          @if (form.controls['nbPages'].hasError('zod')) {
+            <mat-error>
+              {{ form.controls['nbPages'].getError('zod').valueOf() }}
+            </mat-error>
+          }
         </mat-form-field>
         <mat-form-field class="flex-1">
           <mat-label>Authors (separate by coma)</mat-label>
@@ -31,6 +45,11 @@
               <mat-option [value]="author.id">{{ author.firstname }} {{ author.lastname }}</mat-option>
             }
           </mat-select>
+          @if (form.controls['authors'].hasError('zod')) {
+            <mat-error>
+              {{ form.controls['authors'].getError('zod').valueOf() }}
+            </mat-error>
+          }
         </mat-form-field>
         <button matFab (click)="addAuthor()" type="button">
           <mat-icon>add</mat-icon>
@@ -45,6 +64,11 @@
                   cdkAutosizeMaxRows="5"
                   rows="5"
                   formControlName="summary"></textarea>
+        @if (form.controls['summary'].hasError('zod')) {
+          <mat-error>
+            {{ form.controls['summary'].getError('zod').valueOf() }}
+          </mat-error>
+        }
       </mat-form-field>
     </div>
   </mat-dialog-content>

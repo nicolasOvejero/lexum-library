@@ -1,5 +1,6 @@
 package com.nicolas.my_library.controllers;
 
+import com.nicolas.my_library.dto.AiRequestDTO;
 import com.nicolas.my_library.dto.AiResponse;
 import com.nicolas.my_library.exceptions.InvalidParamsException;
 import com.nicolas.my_library.services.AiService;
@@ -18,11 +19,11 @@ public class AiController {
     }
 
     @PostMapping(value = "/ai/book/summary")
-    public AiResponse getBookSummary(@RequestBody String title) {
-        if (title == null || title.isBlank()) {
+    public AiResponse getBookSummary(@RequestBody AiRequestDTO request) {
+        if (request.title == null || request.title.isBlank()) {
             throw new InvalidParamsException();
         }
 
-        return this.aiService.findSummary(title);
+        return this.aiService.findSummary(request.title);
     }
 }
